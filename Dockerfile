@@ -114,16 +114,23 @@ COPY /docker-entrypoint.sh /
 
 # Bash Environments & Default IDEA config
 COPY /home /home
+COPY /home/ideainspect/.bashrc /
 RUN chown -R ideainspect:ideainspect /home/ideainspect
 
 # Prepare a sample project
 COPY / /project
 RUN chown -R ideainspect:ideainspect /project
 
+RUN chmod go+w /etc/passwd
+
 # Initial run to populate index i.e. for JDKs. This should reduce startup times.
 # NOTE: This won't run for Ultimate Edition, as a licence key is missing during execution and current docker
 #       version provide no means to inject secrets during build time. JUST COMMENT IT OUT FOR NOW IN CASE OF ISSUES
-RUN [ "/docker-entrypoint.sh", "-r", "/project" ]
+RUN /docker-entrypoint.sh -r /project && \
+    cp -r /home/ideainspect/$IDEA_CONFDIR / && \
+    cp -r /home/ideainspect/.android / && \
+    chmod -R o+w /$IDEA_CONFDIR /.android
+
 #
 #
 #  At some time this might work, by providing the idea.key as a secret during build time:
