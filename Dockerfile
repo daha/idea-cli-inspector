@@ -114,7 +114,6 @@ COPY /docker-entrypoint.sh /
 
 # Bash Environments & Default IDEA config
 COPY /home /home
-COPY /home/ideainspect/.bashrc /
 RUN chown -R ideainspect:ideainspect /home/ideainspect
 
 # Prepare a sample project
@@ -127,9 +126,10 @@ RUN chmod go+w /etc/passwd
 # NOTE: This won't run for Ultimate Edition, as a licence key is missing during execution and current docker
 #       version provide no means to inject secrets during build time. JUST COMMENT IT OUT FOR NOW IN CASE OF ISSUES
 RUN /docker-entrypoint.sh -r /project && \
-    cp -r /home/ideainspect/$IDEA_CONFDIR / && \
-    cp -r /home/ideainspect/.android / && \
-    chmod -R o+w /$IDEA_CONFDIR /.android
+    cp -r /home/ideainspect/$IDEA_CONFDIR /home/user/ && \
+    cp -r /home/ideainspect/.android /home/user/ && \
+    cp -r /home/ideainspect/.java /home/user/ && \
+    chmod -R 777 /home/user
 
 #
 #

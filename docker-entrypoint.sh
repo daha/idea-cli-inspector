@@ -7,7 +7,7 @@ add_user_to_passwd() {
 
   if [ -z "$uidentry" ] ; then
       # assumes /etc/passwd has root-group (gid 0) ownership
-      echo "$myuid:x:$myuid:$mygid:anonymous uid:/:/bin/false" >> /etc/passwd
+      echo "$myuid:x:$myuid:$mygid:anonymous uid:/home/user:/bin/false" >> /etc/passwd
   fi
 }
 
